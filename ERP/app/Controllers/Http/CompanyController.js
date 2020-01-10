@@ -61,6 +61,8 @@ class CompanyController {
   async show ({ params }) {
     const company = await Company.findOrFail(params.id)
 
+    await company.load('clients')
+
     return company
   }
 

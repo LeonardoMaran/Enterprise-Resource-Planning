@@ -21,13 +21,22 @@ Route.get('/', () => {
 })
 
 Route.post('users', 'UserController.store')
-Route.post('users/:id', 'UserController.update').middleware('auth')
 Route.get('users', 'UserController.index')
 Route.get('users/:id', 'UserController.show')
-Route.delete('users/:id', 'UserController.destroy').middleware('auth')
+Route.put('users/:id', 'UserController.update')
+  .middleware('auth')
+Route.delete('users/:id', 'UserController.destroy')
+  .middleware('auth')
 
 Route.post('sessions', 'SessionController.login')
 
 Route.resource('companies', 'CompanyController')
   .middleware('auth')
   .apiOnly()
+
+Route.post('companies/:id/clients', 'ClientController.store')
+  .middleware('auth')
+Route.put('companies/:company_id/clients/:id', 'ClientController.update')
+  .middleware('auth')
+Route.delete('companies/:company_id/clients/:id', 'ClientController.destroy')
+  .middleware('auth')

@@ -39,6 +39,8 @@ class UserController {
     async show ({ params }){
         const data = await User.findOrFail(params.id)
 
+        await data.load('companies')
+
         return data
     }
 
