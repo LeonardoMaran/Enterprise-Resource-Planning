@@ -19,3 +19,11 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+Route.post('users', 'UserController.store')
+Route.post('users/:id', 'UserController.update').middleware('auth')
+Route.get('users', 'UserController.index')
+Route.get('users/:id', 'UserController.show')
+Route.delete('users/:id', 'UserController.destroy').middleware('auth')
+
+Route.post('sessions', 'SessionController.login')
