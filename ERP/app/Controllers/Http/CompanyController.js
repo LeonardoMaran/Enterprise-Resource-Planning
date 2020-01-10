@@ -58,12 +58,16 @@ class CompanyController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params }) {
-    const company = await Company.findOrFail(params.id)
+  async show ({ params, response }) {
+    try {
+      const company = await Company.findOrFail(params.id)
 
-    await company.load('clients')
+      await company.load('clients')
 
-    return company
+      return company
+    } catch (e) {
+      return response.status(404).send(e)
+    }
   }
 
   /**

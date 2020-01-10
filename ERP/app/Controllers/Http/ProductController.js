@@ -1,19 +1,20 @@
 'use strict'
 
-const Client = use("App/Models/Client")
+const Product = use("App/Models/Product")
 const Company = use("App/Models/Company")
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
-class ClientController {
+class ProductController {
 
-    async index({ params, response }) {
+    async index ({ params, response }) {
+        
         try {
             const company = await Company.findOrFail(params.id)
 
             return company
-                .clients()
+                .products()
                 .fetch()
         } catch (e) {
             return response.status(404)
@@ -21,13 +22,16 @@ class ClientController {
     }
 
     async store ({ request, response, params, auth }) {
-        const client = request.only("name")
+        const product = request.only([
+            "name", 
+            "price"
+        ])
 
         const company = await Company.findOrFail(params.id)
 
         if (auth.user.id == company.creator_id) {
 
-            const data = await Client.create({...client, company_id: params.id, created_by: auth.user.id})
+            const data = await Product.create({...product, company_id: params.id, created_by: auth.user.id})
 
             return data
         } else {
@@ -35,32 +39,36 @@ class ClientController {
         }
     }
 
-    async show({ params, response }) {
+    async show ({ params, response }) {
         try {
-            const client = await Client.findOrFail(params.id)
-
-            return client
+            
+            const product = await Product.findOrFail(params.id)
+            
+            return product
         } catch (e) {
             return response.status(404).send(e)
-        }
+        } 
     }
 
     async update ({ request, response, params, auth }) {
         const {id} = auth.user
 
-        const client = await Client.findOrFail(params.id)
+        const product = await Product.findOrFail(params.id)
 
-        const company = await Company.findOrFail(client.company_id)
+        const company = await Company.findOrFail(product.company_id)
 
         if (id == company.creator_id) {
-            
-            const data = request.only("name")
 
-            client.merge(data)
+            const data = request.only([
+                "name",
+                "price"
+            ])
 
-            await client.save()
+            product.merge(data)
 
-            return client
+            await product.save()
+
+            return product
         } else {
             return response.status(401).send({ error: "Not authorized" })
         }
@@ -69,19 +77,19 @@ class ClientController {
     async destroy ({ params, response, auth }){
         const {id} = auth.user
 
-        const client = await Client.findOrFail(params.id)
+        const product = await Product.findOrFail(params.id)
 
-        const company = await Company.findOrFail(client.company_id)
+        const company = await Company.findOrFail(product.company_id)
 
         if (id == company.creator_id) {
 
-            await client.delete()
+            await product.delete()
 
-            return response.status(200).send({ message: `Client with id ${params.id} deleted`})
+            return response.status(200).send({ message: `Product with id ${params.id} deleted`})
         } else {
             return response.status(401).send({ error: "Not authorized" })
         }
     }
 }
 
-module.exports = ClientController
+module.exports = ProductController
