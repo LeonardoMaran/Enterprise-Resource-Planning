@@ -27,3 +27,7 @@ Route.get('users/:id', 'UserController.show')
 Route.delete('users/:id', 'UserController.destroy').middleware('auth')
 
 Route.post('sessions', 'SessionController.login')
+
+Route.resource('companies', 'CompanyController')
+  .middleware('auth')
+  .apiOnly()
