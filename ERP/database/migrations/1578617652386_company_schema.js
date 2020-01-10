@@ -7,6 +7,12 @@ class CompanySchema extends Schema {
   up () {
     this.create('companies', (table) => {
       table.increments()
+      table.string("name").notNullable().unique()
+      table
+        .integer('creator_id')
+        .unsigned()
+        .references('id')
+        .inTable('users')
       table.timestamps()
     })
   }
