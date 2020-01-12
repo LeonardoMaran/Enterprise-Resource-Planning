@@ -41,3 +41,8 @@ Route.resource('companies/:id/clients', 'ClientController')
 Route.resource('companies/:id/products', 'ProductController')
   .middleware('auth')
   .apiOnly()
+
+Route.resource('companies/:id/sales', 'SaleController')
+  .middleware('auth')
+  .apiOnly()
+

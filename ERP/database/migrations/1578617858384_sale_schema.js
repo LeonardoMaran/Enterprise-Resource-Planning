@@ -15,6 +15,11 @@ class SaleSchema extends Schema {
         .references("id")
         .inTable("companies")
       table
+        .integer("client_id")
+        .unsigned()
+        .references("id")
+        .inTable("clients")
+      table
         .integer("product_id")
         .unsigned()
         .references("id")
